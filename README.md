@@ -17,6 +17,20 @@ npm run dev
 
 > Opcional: tras activar, FormSubmit te envía un alias aleatorio (p. ej. `a1b2c3...`). Puedes reemplazar el correo en `src/config.ts` por ese alias para no exponer la dirección en el código.
 
+## Correo en español con EmailJS (recomendado)
+
+1. Crea una cuenta gratis en https://www.emailjs.com
+2. **Email Services → Add New Service → Gmail**, conecta `scalvo2910@gmail.com` y copia el **Service ID**.
+3. **Email Templates → Create New Template**:
+   - *Subject:* `Nueva respuesta – Encuesta de Servicio al Cliente`
+   - *To Email:* `scalvo2910@gmail.com`
+   - *Content:* pega el código de `email-template.html`.
+   - Guarda y copia el **Template ID**.
+4. **Account → General**: copia la **Public Key**.
+5. Pega los tres valores en `EMAILJS` dentro de `src/config.ts` y sube los cambios.
+
+Si esos valores están vacíos, la app usa FormSubmit.
+
 ## Publicar en GitHub Pages
 
 1. Sube el repositorio a GitHub (rama `main`).

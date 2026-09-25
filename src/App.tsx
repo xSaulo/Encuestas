@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { QUESTIONS } from './questions'
-import { FORMSUBMIT_URL } from './config'
+import { sendSurvey } from './sendSurvey'
 import QuestionInput from './components/QuestionInput'
 
 type Status = 'idle' | 'sending' | 'sent' | 'error'
@@ -20,28 +20,8 @@ export default function App() {
 
   async function submit() {
     setStatus('sending')
-    const payload: Record<string, string> = {
-      _subject: 'Nueva respuesta - Encuesta de Servicio al Cliente',
-      _template: 'table',
-      _captcha: 'false',
-      Fecha: new Date().toLocaleString('es'),
-    }
-    QUESTIONS.forEach((q, i) => {
-      const raw = answers[q.id]?.trim() || '(sin respuesta)'
-      let shown = raw
-      if (q.type === 'stars' && answers[q.id]) shown = `${raw} / 5 ★`
-      if (q.type === 'nps' && answers[q.id]) shown = `${raw} / 10`
-      payload[`${i + 1}. ${q.title}`] = shown
-    })
-
     try {
-      const res = await fetch(FORMSUBMIT_URL, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
-        body: JSON.stringify(payload),
-      })
-      const data = await res.json().catch(() => ({}))
-      if (!res.ok || String(data.success) !== 'true') throw new Error(data.message)
+      await sendSurvey(answers)
       setStatus('sent')
     } catch {
       setStatus('error')
